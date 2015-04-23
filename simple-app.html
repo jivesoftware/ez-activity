@@ -24,43 +24,131 @@ happens to be available in our tests.
 </head>
 
 <body>
-<h1>EZ Activity Stream Generator</h1>
+<h1>EZ Activity Stream Integration Generator</h1>
 <br />
-<p><b>Name</b> (optional):</p>
-<input type="text" style="width: 500px; height:40px" id="addon_name" value="My Activity Stream">
+<p><b>Integration Title</b>:</p>
+<input type="text" style="width: 500px; height:40px" id="addon_name" value="My Activity Stream Integration" />
 
-<p><b>Description</b> (required):</p>
-<textarea id="description" style="width: 500px; height:100px"></textarea>
-<br>
-<br>
+<br />
+<br />
+<p><b>Integration Description</b>:</p>
+<textarea id="description" style="width: 500px; height:50px">This is my activity stream integration.</textarea>
+<br />
+<br />
 
-<p><b>Paste your transform .js here</b> (required):</p>
-<textarea id="xform_js" style="width: 500px; height:200px"></textarea>
-<br>
-<br>
-
-<p><b>Paste some custom html here</b> (optional):</p>
-<textarea id="custom_html" style="width: 500px; height:200px"></textarea>
-<br>
-<br>
-
-<p><b>Paste some custom css here</b> (optional):</p>
-<textarea id="custom_css" style="width: 500px; height:200px"></textarea>
-<br>
-<br>
-
-<p><b>Upload an icon</b>:</p>
+<p></p><b>Integration Icon</b>:</p>
 <form id="form1" runat="server">
     <input type='file' id="inputFile" />
     <img id="image_upload_preview" src="sample-icon-128.png" alt="your image" width="128px"/>
 </form>
 
-<button id="blob" class="btn btn-primary">Download add-on .zip</button>
+<p><b>Transform Function</b>:</p>
+&nbsp;&nbsp;function transform(body, headers, options, callback)
+&nbsp;&nbsp;{
+<br/><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea id="xform_js" style="width: 500px; height:200px">
+/*
+ * TO DO: Parse 'body' arg based on incoming event from 3rd party system
+ */
+
+parsedBody = body.toString();
+
+/*
+ * TO DO: Replace the dummy code below with your own transformation code.
+ */
+
+// Build activity object.
+var activityInfo = { action: {}, actor: {}, object:{} };
+
+// Required name of action. Leave this as "posted".
+activityInfo.action.name = "posted";
+
+// Optional name of actor for this activity. Remove if n/a.
+// activityInfo.actor.name = "Jane Doe";
+
+// Optional email of actor for activity. Remove if n/a.
+// activityInfo.actor.email = "janedoe@example.com";
+
+// Required type of activity. Leave this as "website".
+activityInfo.object.type = "website";
+
+// Optional URL for this activity. Remove if n/a.
+activityInfo.object.url = "http://developer.jivesoftware.com";
+
+// Optional URL to the image for this activity. Remove if n/a.
+//activityInfo.object.image = "https://my.domain.com/image.png";
+
+// Required title of the activity.
+activityInfo.object.title = "Name of Event";
+
+// Optional HTML description of activity. Remove if n/a.
+activityInfo.object.description = "Received this content: "+parsedBody;
+
+/*
+ * Call the callback function with our transformed activity information
+ */
+
+callback({ activity: activityInfo });
+</textarea>
+<br/>}
+<br /><br />
+<button id="test_xform" class="btn btn-primary">Test Transform</button>
+<br />
+<br />
+<div id="test_transform_div">
+    <b>Test Your Transform</b><br/>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+    eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+    deserunt mollit anim id est laborum.
+    <br /><br />
+
+    <table width="550"  cellpadding="20">
+    <tr><td><b>Sample Input</b><br /><textarea id="tx_input" style="width: 250px; height:200px">
+{
+  input1: "test",
+  input2: "test"
+}</textarea></td>
+    <td><td><b>Resulting Output</b><br /><textarea readonly id="tx_output" style="width: 250px; height:200px"></textarea></td>
+    </tr>
+    </table>
+    <br /><br />
+    <button id="run-transform" class="btn btn-primary">Run Transform</button>
+    <button id="notest_xform" class="btn btn-primary">Hide Test</button>
+    <br /><br />
+</div>
+<hr />
+<br />
+
+<button id="blob" class="btn btn-primary">Download Add-on Package</button>
 <div id="j-notice" style="width: 50%"></div>
+
 </body>
 
 <head>
     <script>
+
+        $('#test_xform').click(function () {
+            $('#test_transform_div').show();
+            $('#test_xform').hide();
+        });
+        $('#notest_xform').click(function () {
+            $('#test_transform_div').hide();
+            $('#test_xform').show();
+        });
+
+        $('#run-transform').click(function() {
+            var input_data = $('textarea#tx_input').val();
+            var xform_func = $('textarea#xform_js').val();
+            var transformFunc = new Function('body', 'headers', 'optons', 'callback', xform_func);
+            transformFunc(input_data, {}, {}, callback, xform_func);
+        });
+
+        function callback(data)
+        {
+            $('textarea#tx_output').val(JSON.stringify(data, null, 2));
+        }
 
         $("#inputFile").change(function () {
             readURL(this);
