@@ -175,6 +175,9 @@ callback({ activity: activityInfo });
                         if ( typeof data === 'function' ) {
                             throw new Error('Cannot pass function into callback')
                         }
+                        else if ( typeof data === 'undefined') {
+                            throw new Error('No data passed to callback')
+                        }
                         else if ( typeof data === 'string' ) {
                             resulting_Json = JSON.parse(data);
                         }
@@ -182,13 +185,37 @@ callback({ activity: activityInfo });
                             resulting_Json = data;
                         }
 
-                        // validate JSON
-
+                        // display output
                         $('#tx_output').html('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
 
+                        // validate activity stream JSON
+                        if (!data.activity) {
+                            throw new Error('"activity" object not found.');
+                        }
+                        if (!data.activity.action) {
+                            throw new Error('"activity.action" object not found.');
+                        }
+                        if (!data.activity.action.name) {
+                            throw new Error('"activity.action.name" string not found.');
+                        }
+                        if (!data.activity.object) {
+                            throw new Error('"activity.object" object not found.');
+                        }
+                        if (!data.activity.object.type) {
+                            throw new Error('"activity.object.type" string not found.');
+                        }
+                        if (!data.activity.object.image) {
+                            throw new Error('"activity.object.image" string not found.');
+                        }
+                        if (!data.activity.object.title) {
+                            throw new Error('"activity.object.title" string not found.');
+                        }
+
+                        // if we got here, then we passed
                         $('#validation_check').html('PASSED.');
+
                     } catch (err) {
-                        $('#validation_check').html('FAILED. '+err);
+                        $('#validation_check').html('FAILED.<br/>'+err);
                     }
                 }
 
