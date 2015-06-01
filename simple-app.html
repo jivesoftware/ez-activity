@@ -24,7 +24,7 @@ happens to be available in our tests.
 </head>
 
 <body>
-<h1>EZ Activity Stream Integration Generator</h1>
+<h1>Simple Stream Integration Generator</h1>
 <br />
 <p><b>Integration Title</b>:</p>
 <input type="text" style="width: 500px; height:40px" id="addon_name" value="My Activity Stream Integration" />
@@ -110,7 +110,10 @@ callback({ activity: activityInfo });
   input1: "test",
   input2: "test"
 }</textarea></td>
-    <td><td><b>Resulting Output</b><br /><textarea readonly id="tx_output" style="width: 250px; height:200px"></textarea></td>
+    <td><td><b>Resulting Output</b><br />
+    <div id="tx_output" style="width: 250px; height:200px">
+        <br/>Not yet run<br/>
+    </div></td>
     </tr>
     </table>
     <br /><br />
@@ -141,14 +144,32 @@ callback({ activity: activityInfo });
         $('#run-transform').click(function() {
             var input_data = $('textarea#tx_input').val();
             var xform_func = $('textarea#xform_js').val();
-            var transformFunc = new Function('body', 'headers', 'optons', 'callback', xform_func);
-            transformFunc(input_data, {}, {}, callback, xform_func);
+            var callback_reached = false;
+            try {
+                $('#tx_output').html('');
+                if (xform_func == null || xform_func.trim().length < 1) {
+                    throw new Error("Transform function is empty");
+                }
+                function sentinel() {
+                    if (!callback_reached) {
+                        $('#tx_output').html('<br/><b>ERROR RUNNING TRANSFORM.</b> Callback never run');
+                    }
+                }
+                function callback(data) {
+                    callback_reached = true;
+                    clearTimeout(timerHandle);
+                    $('#tx_output').html('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+                }
+                var timerHandle =  setTimeout(sentinel,750);
+                var transformFunc = new Function('body', 'headers', 'optons', 'callback', xform_func);
+                transformFunc(input_data, {}, {}, callback, xform_func);
+            }
+            catch (err) {
+                clearTimeout(timerHandle);
+                $('#tx_output').html('<br/><b>ERROR RUNNING TRANSFORM.</b> '+err);
+            }
         });
 
-        function callback(data)
-        {
-            $('textarea#tx_output').val(JSON.stringify(data, null, 2));
-        }
 
         $("#inputFile").change(function () {
             readURL(this);
