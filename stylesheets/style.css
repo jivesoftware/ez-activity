@@ -53,3 +53,7 @@ button {
     text-decoration: none;
     outline: none;
 }
+
+#image_upload_preview {
+    display: none;
+}

@@ -160,18 +160,15 @@ callback({ activity: activityInfo });
         if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
             $("#j-notice").html("<br>For Safari browsers, the file will download with a name like <b>Unknown</b>. " +
                     "You can upload this straightaway to your Jive instance, or rename name the file with a .zip extension to easily view its contents.");
-            // data URI
-            function downloadWithDataURI() {
+            $('#blob').click( function() {
                 window.location = "data:application/zip;base64," + createZip().generate({type:"base64"});
-            }
-            var dataUriLink = document.getElementById('blob');
-            bindEvent(dataUriLink, 'click', downloadWithDataURI);
+            } );
         } else {
             // other
             // safari
             var blobLink = document.getElementById('blob');
             if (JSZip.support.blob) {
-                function downloadWithBlob() {
+                $('#blob').click( function() {
                     try {
                         var blob = createZip().generate({type:"blob"});
                         // see FileSaver.js
@@ -180,8 +177,7 @@ callback({ activity: activityInfo });
                         blobLink.innerHTML += " " + e;
                     }
                     return false;
-                }
-                bindEvent(blobLink, 'click', downloadWithBlob);
+                } );
             } else {
                 blobLink.innerHTML += " (not supported on this browser)";
             }

@@ -37,13 +37,13 @@ $.get('src/data/xform.js', function(data) {
     src.data.xform_js = data;
 });
 
-encodeImage("sample-icon-128.png", function (dataURL) {
-    src.data.sample_icon_128_png = dataURL;
-    $(document).ready( function() {
-        $("#image_upload_preview").attr("src", dataURL);
-        resizeImage.call( $("#image_upload_preview")[0] );
-    });
-});
+//encodeImage("sample-icon-128.png", function (dataURL) {
+//    src.data.sample_icon_128_png = dataURL;
+//    $(document).ready( function() {
+//        $("#image_upload_preview").attr("src", dataURL);
+//        resizeImage.call( $("#image_upload_preview")[0] );
+//    });
+//});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,10 +61,10 @@ function createZip() {
     var definition = _src.definition_json;
 
     var customHTMLsrc = $('#custom_html').val();
-    var customHTML = customHTMLsrc.length > 0 ? customHTMLsrc : '';
+    var customHTML = customHTMLsrc && customHTMLsrc.length > 0 ? customHTMLsrc : '';
 
     var customCSSsrc = $('#custom_css').val();
-    var customCSS = customCSSsrc.length > 0 ? '<style>' + customCSSsrc + '</style>' : '';
+    var customCSS = customCSSsrc && customCSSsrc.length > 0 ? '<style>' + customCSSsrc + '</style>' : '';
 
     var transformJSsrc = $('#xform_js').val();
     transformJSsrc = transformJSsrc ? transformJSsrc : _src.data.xform_js;
@@ -184,7 +184,7 @@ function readURL(input) {
         var reader = new FileReader();
         reader.onload = function (e) {
             var imgSrc = e.target.result;
-            $('#image_upload_preview').attr('src', imgSrc);
+            $('#image_upload_preview').attr('src', imgSrc).show();
 
             var img = new Image;
 
