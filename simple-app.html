@@ -110,10 +110,13 @@ callback({ activity: activityInfo });
   input1: "test",
   input2: "test"
 }</textarea></td>
-    <td><td><b>Resulting Output</b><br />
+    <td><b>Resulting Output</b><br />
     <div id="tx_output" style="width: 250px; height:200px">
         <br/>Not yet run<br/>
     </div></td>
+    </tr>
+    <tr>
+        <td></td><td><b>Validation Check</b>: <span id="validation_check">N/A</span></td>
     </tr>
     </table>
     <br /><br />
@@ -146,26 +149,58 @@ callback({ activity: activityInfo });
             var xform_func = $('textarea#xform_js').val();
             var callback_reached = false;
             try {
+                $('#validation_check').html('N/A');
+
+                // clear output
                 $('#tx_output').html('');
+
+                // check if transform function is empty
                 if (xform_func == null || xform_func.trim().length < 1) {
                     throw new Error("Transform function is empty");
                 }
+
+                // timer function in case callback isn't called
                 function sentinel() {
                     if (!callback_reached) {
                         $('#tx_output').html('<br/><b>ERROR RUNNING TRANSFORM.</b> Callback never run');
                     }
                 }
+
+                // callback function to be executed by transform code
                 function callback(data) {
                     callback_reached = true;
-                    clearTimeout(timerHandle);
-                    $('#tx_output').html('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+                    clearTimeout(timer_handle);
+                    try {
+                        var resulting_Json;
+                        if ( typeof data === 'function' ) {
+                            throw new Error('Cannot pass function into callback')
+                        }
+                        else if ( typeof data === 'string' ) {
+                            resulting_Json = JSON.parse(data);
+                        }
+                        else {
+                            resulting_Json = data;
+                        }
+
+                        // validate JSON
+
+                        $('#tx_output').html('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+
+                        $('#validation_check').html('PASSED.');
+                    } catch (err) {
+                        $('#validation_check').html('FAILED. '+err);
+                    }
                 }
-                var timerHandle =  setTimeout(sentinel,750);
+
+                // start a timer to check if callback is called in time
+                var timer_handle =  setTimeout(sentinel,750);
+
+                // run transform function
                 var transformFunc = new Function('body', 'headers', 'optons', 'callback', xform_func);
                 transformFunc(input_data, {}, {}, callback, xform_func);
             }
             catch (err) {
-                clearTimeout(timerHandle);
+                clearTimeout(timer_handle);
                 $('#tx_output').html('<br/><b>ERROR RUNNING TRANSFORM.</b> '+err);
             }
         });
