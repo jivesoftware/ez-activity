@@ -25,10 +25,10 @@ happens to be available in our tests.
 
 <body>
 <h1>Simple Stream Integration Generator</h1>
-<p><em>This form lets you create an add-on containing a Jive Simple Stream Integration. A Simple Stream Integration is an
+<p>This form lets you create an add-on containing a Jive Simple Stream Integration. A Simple Stream Integration is an
 integration between a third party webhook and a Jive activity stream. For more details about this feature,
 refer to <a href="https://community.jivesoftware.com/docs/DOC-157511">Developing Simple Stream Integrations</a> in the
-Jive Community.</em></p>
+Jive Community.</p>
 <br />
 <h2>Title</h2>
 <input type="text" style="width: 500px; height:40px" id="addon_name" value="My Activity Stream Integration" />
@@ -47,12 +47,10 @@ Jive Community.</em></p>
 </form>
 
 <h2>Transform Function</h2>
-<p><em>This function executesq whenever the third party webhook calls the Jive URL. Within this function,
+<p>This function executes whenever the third party webhook calls the Jive URL. Within this function,
     you should parse the contents of the incoming body and then call the callback function with JSON that
-    complies with Jive's activity stream format.</em></p>
-<b>function transform(body, headers, options, callback)
-&nbsp;&nbsp;{</b>
-<br/><br/>
+    complies with Jive's activity stream format.</p>
+<pre><b>function transform(body, headers, options, callback) {</b></pre>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea class="j-code-block" id="xform_js" style="width: 800px; height:200px">
 /*
  * TO DO: Parse 'body' arg based on incoming event from 3rd party system
@@ -91,16 +89,15 @@ activityInfo.object.description = "Received this content: "+parsedBody;
 
 callback({ activity: activityInfo });
 </textarea>
-<br/><b>}</b>
-<br /><br />
+<br/><pre><b>}</b></pre>
 <button id="test_xform" class="btn btn-primary">Test Transform</button>
 <br />
 <div id="test_transform_div">
     <h2>Test Your Transform</h2>
-    <p><em>You can test your transform function by clicking the <b>Run Transform</b> button. Update
+    <p>You can test your transform function by clicking the <b>Run Transform</b> button. Update
         the <b>Sample Input</b> with data that should come from the third party webhook.
         The <b>Resulting Output</b> text area contains the output of your transform function; it should be in the Jive
-        activity stream format. Verify that the two tests below pass before downloading the add-on package.</em></p>
+        activity stream format. Verify that the two tests below pass before downloading the add-on package.</p>
     <button id="run-transform" class="btn btn-primary">Run Transform</button>
     <table width="550"  cellpadding="20">
     <tr><td><b>Sample Input</b><br /><textarea class="j-code-block" id="tx_input" style="width: 375px; height:200px">
@@ -121,9 +118,9 @@ callback({ activity: activityInfo });
 </div>
 <br /><hr /><br />
 <button id="blob" class="btn btn-primary">Download Add-on Package</button>
-<p><em>After downloading this package, upload it into your Jive community.
+<p>After downloading this package, upload it into your Jive community.
     Check out <a href="https://community.jivesoftware.com/docs/DOC-157511">Developing Simple Stream Integrations</a>
-    for more information.</em></p>
+    for more information.</p>
 <div id="j-notice" style="width: 50%"></div>
 
 </body>
