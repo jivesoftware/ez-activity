@@ -113,15 +113,14 @@ callback({ activity: activityInfo });
   input2: "test"
 }</textarea></td>
     <td><b>Resulting Output</b><br />
-    <div id="tx_output" style="width: 250px; height:200px">
-        <br/>Not yet run<br/>
-    </div></td>
-    </tr>
-    <tr>
-        <td></td><td><b>Validation Check</b>: <span id="validation_check">N/A</span></td>
+        <textarea id="tx_output" style="width: 250px; height:200px">Not Started</textarea>
+    </td>
     </tr>
     </table>
-    <br /><br />
+    <br />
+    <p><b>Transform Function Test</b>: <span id="callback_check">N/A</span></p>
+    <p><b>Output Validation Test</b>: <span id="validation_check">N/A</span></p>
+    <br />
     <button id="run-transform" class="btn btn-primary">Run Transform</button>
     <button id="notest_xform" class="btn btn-primary">Hide Test</button>
     <br /><br />
@@ -151,10 +150,10 @@ callback({ activity: activityInfo });
             var xform_func = $('textarea#xform_js').val();
             var callback_reached = false;
             try {
+                // clear output fields
+                $('#tx_output').val('');
                 $('#validation_check').html('N/A');
-
-                // clear output
-                $('#tx_output').html('');
+                $('#callback_check').html('N/A');
 
                 // check if transform function is empty
                 if (xform_func == null || xform_func.trim().length < 1) {
@@ -164,7 +163,7 @@ callback({ activity: activityInfo });
                 // timer function in case callback isn't called
                 function sentinel() {
                     if (!callback_reached) {
-                        $('#tx_output').html('<br/><b>ERROR RUNNING TRANSFORM.</b> Callback never run');
+                        $('#callback_check').html('FAILED.<br/>Error: Callback never run');
                     }
                 }
 
@@ -172,6 +171,7 @@ callback({ activity: activityInfo });
                 function callback(data) {
                     callback_reached = true;
                     clearTimeout(timer_handle);
+                    $('#callback_check').html('PASSED. Data sent to callback.');
                     try {
                         var resulting_Json;
                         if ( typeof data === 'function' ) {
@@ -181,43 +181,29 @@ callback({ activity: activityInfo });
                             throw new Error('No data passed to callback')
                         }
                         else if ( typeof data === 'string' ) {
-                            resulting_Json = JSON.parse(data);
+                            try {
+                                resulting_Json = JSON.parse(data);
+                            }
+                            catch (err) {
+                                throw new Error("Invalid JSON data passed to callback. "+err);
+                            }
                         }
                         else {
                             resulting_Json = data;
                         }
 
                         // display output
-                        $('#tx_output').html('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+                        $('#tx_output').val(JSON.stringify(data, null, 2));
 
                         // validate activity stream JSON
-                        if (!data.activity) {
-                            throw new Error('"activity" object not found.');
-                        }
-                        if (!data.activity.action) {
-                            throw new Error('"activity.action" object not found.');
-                        }
-                        if (!data.activity.action.name) {
-                            throw new Error('"activity.action.name" string not found.');
-                        }
-                        if (!data.activity.object) {
-                            throw new Error('"activity.object" object not found.');
-                        }
-                        if (!data.activity.object.type) {
-                            throw new Error('"activity.object.type" string not found.');
-                        }
-                        if (!data.activity.object.image) {
-                            throw new Error('"activity.object.image" string not found.');
-                        }
-                        if (!data.activity.object.title) {
-                            throw new Error('"activity.object.title" string not found.');
-                        }
+                        validateSchema(data);
 
                         // if we got here, then we passed
-                        $('#validation_check').html('PASSED.');
+                        $('#validation_check').html('PASSED. Data format is valid.');
 
                     } catch (err) {
-                        $('#validation_check').html('FAILED.<br/>'+err);
+                        $('#validation_check').html('FAILED. '+err+
+                          '<br/><br/>For more information about the JSON schema of a Jive activity stream, refer to <a href="https://community.jivesoftware.com/docs/DOC-133425">Creating an Activity Stream</a> in the Jive Community.');
                     }
                 }
 
@@ -230,10 +216,54 @@ callback({ activity: activityInfo });
             }
             catch (err) {
                 clearTimeout(timer_handle);
-                $('#tx_output').html('<br/><b>ERROR RUNNING TRANSFORM.</b> '+err);
+                $('#callback_check').html('FAILED.<br/>'+err);
             }
         });
 
+        function validateSchema(data) {
+            if (!data.activity) {
+                throw new Error('"activity" object not found.');
+            }
+            if (typeof data.activity !== 'object') {
+                throw new Error('"activity" is not an object type.');
+            }
+            if (!data.activity.action) {
+                throw new Error('"activity.action" object not found.');
+            }
+            if (typeof data.activity.action !== 'object') {
+                throw new Error('"activity.action" is not an object type.');
+            }
+            if (!data.activity.action.name) {
+                throw new Error('"activity.action.name" string not found.');
+            }
+            if (data.activity.action.name !== 'posted') {
+                throw new Error('"activity.action.name" string should be "posted".');
+            }
+            if (!data.activity.object) {
+                throw new Error('"activity.object" object not found.');
+            }
+            if (typeof data.activity.object !== 'object') {
+                throw new Error('"activity.object" is not an object type.');
+            }
+            if (!data.activity.object.type) {
+                throw new Error('"activity.object.type" string not found.');
+            }
+            if (data.activity.object.type !== 'website') {
+                throw new Error('"activity.action.name" string should be "website".');
+            }
+            if (!data.activity.object.image) {
+                throw new Error('"activity.object.image" string not found.');
+            }
+            if (typeof data.activity.object.image !== 'string') {
+                throw new Error('"activity.object.image" should be the URL for the image.');
+            }
+            if (!data.activity.object.title) {
+                throw new Error('"activity.object.title" string not found.');
+            }
+            if (typeof data.activity.object.title !== 'string') {
+                throw new Error('"activity.object.title" should be a string.');
+            }
+        }
 
         $("#inputFile").change(function () {
             readURL(this);
