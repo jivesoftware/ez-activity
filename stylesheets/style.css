@@ -1,6 +1,6 @@
 body {
     color: #5e5e5e;
-    font: 13px 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    font: 16px 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
     margin: 50px;
 }
 
@@ -10,11 +10,20 @@ body {
 
 h1, h2 {
     margin-top: 0;
-    margin-bottom: -5px;
+    margin-bottom: 5px;
 }
 
 ul {
     margin-left:0px; padding-left:20px; list-style-type:square;
+}
+
+input,
+textarea {
+   font: 14px 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+}
+
+.j-code-block {
+    font: 12px 'Courier';
 }
 
 .j-textarea {

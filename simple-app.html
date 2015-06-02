@@ -26,30 +26,30 @@ happens to be available in our tests.
 <body>
 <h1>Simple Stream Integration Generator</h1>
 <br />
-<p><b>Integration Title</b>:</p>
+<h2>Title</h2>
 <input type="text" style="width: 500px; height:40px" id="addon_name" value="My Activity Stream Integration" />
 
 <br />
 <br />
-<p><b>Integration Description</b>:</p>
+<h2>Description</h2>
 <textarea id="description" style="width: 500px; height:50px">This is my activity stream integration.</textarea>
 <br />
 <br />
 
-<p></p><b>Integration Icon</b>:</p>
+<h2>Icon</h2>
 <form id="form1" runat="server">
     <input type='file' id="inputFile" />
     <img id="image_upload_preview" src="sample-icon-128.png" alt="your image" width="128px"/>
 </form>
 
-<p><b>Transform Function</b>:</p>
+<h2>Transform Function</h2>
 <p><em>This function must eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident. For more information
-about the JSON schema of a Jive activity stream,
-refer to <a href="https://community.jivesoftware.com/docs/DOC-133425">Creating an Activity Stream</a> in the Jive Community.</em></p>
-&nbsp;&nbsp;<b>function transform(body, headers, options, callback)
+about this function,
+refer to <a href="https://community.jivesoftware.com/docs/DOC-157511">Developing Simple Stream Integrations</a> in the Jive Community.</em></p>
+<b>function transform(body, headers, options, callback)
 &nbsp;&nbsp;{</b>
 <br/><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea id="xform_js" style="width: 500px; height:200px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea class="j-code-block" id="xform_js" style="width: 800px; height:200px">
 /*
  * TO DO: Parse 'body' arg based on incoming event from 3rd party system
  */
@@ -61,10 +61,7 @@ parsedBody = body.toString();
  */
 
 // Build activity object.
-var activityInfo = { action: {}, actor: {}, object:{} };
-
-// Required name of action. Leave this as "posted".
-activityInfo.action.name = "posted";
+var activityInfo = { actor: {}, object:{} };
 
 // Optional name of actor for this activity. Remove if n/a.
 // activityInfo.actor.name = "Jane Doe";
@@ -72,14 +69,11 @@ activityInfo.action.name = "posted";
 // Optional email of actor for activity. Remove if n/a.
 // activityInfo.actor.email = "janedoe@example.com";
 
-// Required type of activity. Leave this as "website".
-activityInfo.object.type = "website";
-
 // Optional URL for this activity. Remove if n/a.
 activityInfo.object.url = "http://developer.jivesoftware.com";
 
-// Optional URL to the image for this activity. Remove if n/a.
-//activityInfo.object.image = "https://my.domain.com/image.png";
+// Required URL to the image for this activity.
+activityInfo.object.image = "http://bit.ly/1wYwajm";
 
 // Required title of the activity.
 activityInfo.object.title = "Name of Event";
@@ -97,37 +91,32 @@ callback({ activity: activityInfo });
 <br /><br />
 <button id="test_xform" class="btn btn-primary">Test Transform</button>
 <br />
-<br />
 <div id="test_transform_div">
-    <b>Test Your Transform</b><br/>
+    <h2>Test Your Transform</h2>
     <p><em>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
     dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
     ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
     eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
     deserunt mollit anim id est laborum.</em></p>
-
+    <button id="run-transform" class="btn btn-primary">Run Transform</button>
     <table width="550"  cellpadding="20">
-    <tr><td><b>Sample Input</b><br /><textarea id="tx_input" style="width: 250px; height:200px">
+    <tr><td><b>Sample Input</b><br /><textarea class="j-code-block" id="tx_input" style="width: 375px; height:200px">
 {
   input1: "test",
   input2: "test"
 }</textarea></td>
     <td><b>Resulting Output</b><br />
-        <textarea id="tx_output" readonly style="width: 250px; height:200px">Not Started</textarea>
+        <textarea class="j-code-block" id="tx_output" readonly style="width: 375px; height:200px"></textarea>
     </td>
     </tr>
     </table>
-    <br />
     <p><b>Transform Function Test</b>: <span id="callback_check">N/A</span></p>
     <p><b>Output Validation Test</b>: <span id="validation_check">N/A</span></p>
     <br />
-    <button id="run-transform" class="btn btn-primary">Run Transform</button>
-    <button id="notest_xform" class="btn btn-primary">Hide Test</button>
-    <br /><br />
+    <button id="notest_xform" class="btn btn-primary">Hide Transform Test</button>
+    <br />
 </div>
-<hr />
-<br />
-
+<br /><hr /><br />
 <button id="blob" class="btn btn-primary">Download Add-on Package</button>
 <div id="j-notice" style="width: 50%"></div>
 
@@ -157,13 +146,13 @@ callback({ activity: activityInfo });
 
                 // check if transform function is empty
                 if (xform_func == null || xform_func.trim().length < 1) {
-                    throw new Error("Transform function is empty");
+                    throw new Error("Transform function is empty.");
                 }
 
                 // timer function in case callback isn't called
                 function sentinel() {
                     if (!callback_reached) {
-                        $('#callback_check').html('FAILED.<br/>Error: Callback never run');
+                        $('#callback_check').html('FAILED.<br/>Error: Callback never executed.');
                     }
                 }
 
@@ -171,14 +160,14 @@ callback({ activity: activityInfo });
                 function callback(data) {
                     callback_reached = true;
                     clearTimeout(timer_handle);
-                    $('#callback_check').html('PASSED. Data sent to callback.');
+                    $('#callback_check').html('PASSED. Callback has executed.');
                     try {
                         var resulting_Json;
                         if ( typeof data === 'function' ) {
-                            throw new Error('Cannot pass function into callback')
+                            throw new Error('Cannot pass function into callback.')
                         }
                         else if ( typeof data === 'undefined') {
-                            throw new Error('No data passed to callback')
+                            throw new Error('No data passed to callback.')
                         }
                         else if ( typeof data === 'string' ) {
                             try {
@@ -203,7 +192,7 @@ callback({ activity: activityInfo });
 
                     } catch (err) {
                         $('#validation_check').html('FAILED. '+err+
-                          '<br/><br/>For more information about the JSON schema of a Jive activity stream, refer to <a href="https://community.jivesoftware.com/docs/DOC-133425">Creating an Activity Stream</a> in the Jive Community.');
+                          '<br/><br/>For help, refer to <a href="https://community.jivesoftware.com/docs/DOC-157511">Developing Simple Stream Integrations</a> in the Jive Community.');
                     }
                 }
 
@@ -227,29 +216,11 @@ callback({ activity: activityInfo });
             if (typeof data.activity !== 'object') {
                 throw new Error('"activity" is not an object type.');
             }
-            if (!data.activity.action) {
-                throw new Error('"activity.action" object not found.');
-            }
-            if (typeof data.activity.action !== 'object') {
-                throw new Error('"activity.action" is not an object type.');
-            }
-            if (!data.activity.action.name) {
-                throw new Error('"activity.action.name" string not found.');
-            }
-            if (data.activity.action.name !== 'posted') {
-                throw new Error('"activity.action.name" string should be "posted".');
-            }
             if (!data.activity.object) {
                 throw new Error('"activity.object" object not found.');
             }
             if (typeof data.activity.object !== 'object') {
                 throw new Error('"activity.object" is not an object type.');
-            }
-            if (!data.activity.object.type) {
-                throw new Error('"activity.object.type" string not found.');
-            }
-            if (data.activity.object.type !== 'website') {
-                throw new Error('"activity.action.name" string should be "website".');
             }
             if (!data.activity.object.image) {
                 throw new Error('"activity.object.image" string not found.');

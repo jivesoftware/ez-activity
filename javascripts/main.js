@@ -66,7 +66,9 @@ function createZip() {
     var customCSSsrc = $('#custom_css').val();
     var customCSS = customCSSsrc && customCSSsrc.length > 0 ? '<style>' + customCSSsrc + '</style>' : '';
 
-    var transformJSsrc = $('#xform_js').val();
+    var transformJSsrc = "function transform(body, headers, options, callback)   {\n\n" +
+        $('#xform_js').val() + "\n}";
+
     transformJSsrc = transformJSsrc ? transformJSsrc : _src.data.xform_js;
 
     console.log("Creating zip contents...");
