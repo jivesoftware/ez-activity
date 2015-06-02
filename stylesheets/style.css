@@ -31,6 +31,16 @@ textarea {
     height: 512px;
 }
 
+.j-success {
+    font-weight: bold;
+    color:green;
+}
+
+.j-fail {
+    font-weight: bold;
+    color:red;
+}
+
 button.j-btn {
     color: #fff;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
