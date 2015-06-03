@@ -156,7 +156,7 @@ callback({ activity: activityInfo });
                 // timer function in case callback isn't called
                 function sentinel() {
                     if (!callback_reached) {
-                        $('#callback_check').html('<span class="j-fail">FAILED</span>.<br/>Error: Callback never executed.');
+                        $('#callback_check').html('<span class="j-fail">FAILED</span>.<br/>Error: Callback never executed. Be sure to call the "callback" function with activity stream data.');
                     }
                 }
 
@@ -196,7 +196,7 @@ callback({ activity: activityInfo });
 
                     } catch (err) {
                         $('#validation_check').html('<span class="j-fail">FAILED</span>. '+err+
-                          '<br/><br/>For help, refer to <a href="https://community.jivesoftware.com/docs/DOC-157511">Developing Simple Stream Integrations</a> in the Jive Community.');
+                          '<br/><br/>For help, refer to <a href="https://community.jivesoftware.com/docs/DOC-157511">Developing Simple Stream Integrations</a> in the Jive Community. This document provides the JSON schema for simple stream integrations.');
                     }
                 }
 
@@ -230,7 +230,7 @@ callback({ activity: activityInfo });
                 throw new Error('"activity.object.image" string not found.');
             }
             if (typeof data.activity.object.image !== 'string') {
-                throw new Error('"activity.object.image" should be the URL for the image.');
+                throw new Error('"activity.object.image" should be the URL for an image.');
             }
             if (!data.activity.object.title) {
                 throw new Error('"activity.object.title" string not found.');
