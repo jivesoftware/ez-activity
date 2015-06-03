@@ -94,11 +94,10 @@ callback({ activity: activityInfo });
 <br />
 <div id="test_transform_div">
     <h2>Test Your Transform</h2>
-    <p>You can test your transform function by clicking the <b>Run Transform</b> button. Update
-        the <b>Sample Input</b> with data that should come from the third party webhook.
+    <p>Update the <b>Sample Input</b> with data that should come from the third party webhook. You can then test your
+        transform function by clicking the <b>Run Transform</b> button.
         The <b>Resulting Output</b> text area contains the output of your transform function; it should be in the Jive
         activity stream format. Verify that the two tests below pass before downloading the add-on package.</p>
-    <button id="run-transform" class="btn btn-primary">Run Transform</button>
     <table width="550"  cellpadding="20">
     <tr><td><b>Sample Input</b><br /><textarea class="j-code-block" id="tx_input" style="width: 375px; height:200px">
 {
@@ -113,12 +112,12 @@ callback({ activity: activityInfo });
     <p><b>Transform Function Test</b>: <span id="callback_check">N/A</span></p>
     <p><b>Output Validation Test</b>: <span id="validation_check">N/A</span></p>
     <br />
-    <button id="notest_xform" class="btn btn-primary">Hide Transform Test</button>
+    <button id="run-transform" class="btn btn-primary">Run Transform</button> <button id="notest_xform" class="btn btn-primary">Hide Test</button>
     <br />
 </div>
 <br /><hr /><br />
-<button id="blob" class="btn btn-primary">Download Add-on Package</button>
-<p>After downloading this package, upload it into your Jive community.
+<button id="blob" class="btn btn-primary">Download Add-on</button>
+<p>After downloading this add-on package, upload it into your Jive community.
     Check out <a href="https://community.jivesoftware.com/docs/DOC-157511">Developing Simple Stream Integrations</a>
     for more information.</p>
 <div id="j-notice" style="width: 50%"></div>

@@ -79,9 +79,15 @@ function createZip() {
     var p16 = $("#image_upload_preview").attr("data-p16");
     var p48 = $("#image_upload_preview").attr("data-p48");
     var p128 = $("#image_upload_preview").attr("data-p128");
-    zip.folder("data").file("icon-16.png", p16, { base64: true});
-    zip.folder("data").file("icon-48.png", p48, { base64: true});
-    zip.folder("data").file("icon-128.png", p128, { base64: true});
+    if ( p16 ) {
+        zip.folder("data").file("icon-16.png", p16, { base64: true});
+    }
+    if ( p48 ) {
+        zip.folder("data").file("icon-48.png", p48, { base64: true});
+    }
+    if ( p128 ) {
+        zip.folder("data").file("icon-128.png", p128, { base64: true});
+    }
 
     traverse(_src, function(key, value, object) {
         if ( value && typeof value === 'string') {
