@@ -1,5 +1,6 @@
-# EZ Activity Stream Integration
+# Jive Simple Stream Integration Generator
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+You can easily create a Jive Simple Stream Integration using this form that auto-generates the package for you (in the form of a Jive add-on). All you need to do is write the transform function in JavaScript. Once you have the add-on package, you can upload it to your Jive community.
 
-[Activity Stream Integration Form](https://rawgit.com/jivesoftware/ez-activity/master/simple-app.html)
+* [Simple Stream Integration Form](https://rawgit.com/jivesoftware/ez-activity/master/simple-app.html)
+* [Developing Simple Stream Integrations](https://community.jivesoftware.com/docs/DOC-157511)
