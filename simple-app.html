@@ -204,15 +204,17 @@ callback({ activity: activityInfo });
                 var timer_handle =  setTimeout(sentinel,750);
 
                 // run transform function
-                var transformFunc = new Function('body', 'headers', 'optons', 'callback', xform_func);
+                var transformFunc = new Function('body', 'headers', 'options', 'callback', xform_func);
                 try {
                     // try to parse into JSON...
-                    input_data = JSON.parse(input_data);    
+                    object_data = JSON.parse(input_data);
+                    transformFunc(object_data, {}, {}, callback, xform_func);
                 }
                 catch (err) {
-                    // ignore and just pass as string
+                    // ignore error and just pass as string
+                    transformFunc(input_data, {}, {}, callback, xform_func);
                 }
-                transformFunc(input_data, {}, {}, callback, xform_func);
+                
             }
             catch (err) {
                 clearTimeout(timer_handle);
