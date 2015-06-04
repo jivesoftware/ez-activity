@@ -205,6 +205,13 @@ callback({ activity: activityInfo });
 
                 // run transform function
                 var transformFunc = new Function('body', 'headers', 'optons', 'callback', xform_func);
+                try {
+                    // try to parse into JSON...
+                    input_data = JSON.parse(input_data);    
+                }
+                catch (err) {
+                    // ignore and just pass as string
+                }
                 transformFunc(input_data, {}, {}, callback, xform_func);
             }
             catch (err) {
